@@ -41,11 +41,11 @@ int main()
     char c;
     // delay ...
     cout << "Введіть щось щоб почати таймер: ";
+    cin >> c;
     ob.Start();
-    cin >> c;
     cout << "Введіть щось щоб зупинити таймер: ";
-    ob.Stop();
     cin >> c;
+    ob.Stop();
     ob.Show();
     
     return 0;

@@ -16,9 +16,9 @@ public:
 };
 mybox::mybox(double x, double y, double z)
 {
-    x = x;
-    y = y;
-    z = z;
+    this->x = x;
+    this->y = y;
+    this->z = z;
     volume = x * y * z;
 }
 void mybox::Volume()

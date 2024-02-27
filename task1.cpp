@@ -21,15 +21,15 @@ double Employee::totalSalary = 0;
 
 Employee::Employee(double rate, int hours)
 {
-    rate = rate;
-    hours = hours;
-    salary = rate * hours;
+    this->rate = rate;
+    this->hours = hours;
+    this->salary = rate * hours;
     totalSalary += salary;
 }
 
 Employee::Employee(double salary)
 {
-    salary = salary;
+    this->salary = salary;
     totalSalary += salary;
 }
 
@@ -72,6 +72,6 @@ int main()
         }
     }
 
-    cout << "Сумарна зарплата: " << Employee::getTotalSalary();
+    cout << "Сумарна зарплата: " << Employee::getTotalSalary() << endl;
     return 0;
 }

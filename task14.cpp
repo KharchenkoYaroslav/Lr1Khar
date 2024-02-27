@@ -39,7 +39,6 @@ int main()
     stopwatch ob;
     
     char c;
-    // delay ...
     cout << "Введіть щось щоб почати таймер: ";
     cin >> c;
     ob.Start();

@@ -1,43 +1,57 @@
 #include <iostream>
-#include <ctime> 
 #include <windows.h>
 
 using namespace std;
-class stopwatch
-{
-    clock_t start;
-    clock_t end;
+
+class stopwatch {
+    LARGE_INTEGER start;
+    LARGE_INTEGER end;
+    LARGE_INTEGER frequency;
+    LARGE_INTEGER creation_time;
+
 public:
-    stopwatch(); 
-    ~stopwatch(); 
+    stopwatch();
+    ~stopwatch();
     void Start();
     void Stop();
     void Show();
 };
-stopwatch:: stopwatch()
-{
-    start = 0;
-    end = 0;
-}
-stopwatch :: ~stopwatch()
-{
-    cout << "Пройшло часу зі створення об'єкта: " << clock() / CLOCKS_PER_SEC << " секунд\n";
-}
-void stopwatch :: Start(){
-    start = clock();
-}
-void stopwatch :: Stop(){
-    end = clock();
-}
-void stopwatch :: Show(){
-    cout << "Пройшло часу зі старту: " << (end - start) / CLOCKS_PER_SEC << " секунд\n";
+
+stopwatch::stopwatch() {
+    QueryPerformanceFrequency(&frequency);
+    QueryPerformanceCounter(&creation_time); // Записуємо час створення об'єкта
+    start.QuadPart = 0;
+    end.QuadPart = 0;
 }
 
-int main()
-{
+stopwatch::~stopwatch() {
+    LARGE_INTEGER current_time;
+    QueryPerformanceCounter(&current_time); // Отримуємо поточний час
+    LARGE_INTEGER elapsed;
+    elapsed.QuadPart = current_time.QuadPart - creation_time.QuadPart; // Обчислюємо різницю між поточним часом та часом створення
+    double elapsed_seconds = static_cast<double>(elapsed.QuadPart) / frequency.QuadPart;
+    cout << "Пройшло часу зі створення об'єкта: " << elapsed_seconds << " секунд\n";
+}
+
+void stopwatch::Start() {
+    QueryPerformanceCounter(&start);
+}
+
+void stopwatch::Stop() {
+    QueryPerformanceCounter(&end);
+}
+
+void stopwatch::Show() {
+    LARGE_INTEGER elapsed;
+    elapsed.QuadPart = end.QuadPart - start.QuadPart;
+    double elapsed_seconds = static_cast<double>(elapsed.QuadPart) / frequency.QuadPart;
+    cout << "Пройшло часу зі старту: " << elapsed_seconds << " секунд\n";
+}
+
+int main() {
     SetConsoleOutputCP(65001);
     stopwatch ob;
-    
+
     char c;
     cout << "Введіть щось щоб почати таймер: ";
     cin >> c;
@@ -46,6 +60,6 @@ int main()
     cin >> c;
     ob.Stop();
     ob.Show();
-    
+
     return 0;
 }

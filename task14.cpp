@@ -1,13 +1,12 @@
 #include <iostream>
-#include <windows.h>
+#include <time.h>
 
 using namespace std;
 
 class stopwatch {
-    LARGE_INTEGER start;
-    LARGE_INTEGER end;
-    LARGE_INTEGER frequency;
-    LARGE_INTEGER creation_time;
+    timespec start;
+    timespec end;
+    timespec creation_time;
 
 public:
     stopwatch();
@@ -18,38 +17,34 @@ public:
 };
 
 stopwatch::stopwatch() {
-    QueryPerformanceFrequency(&frequency);
-    QueryPerformanceCounter(&creation_time); // Записуємо час створення об'єкта
-    start.QuadPart = 0;
-    end.QuadPart = 0;
+    clock_gettime(CLOCK_MONOTONIC, &creation_time);
+    start.tv_sec = 0;
+    start.tv_nsec = 0;
+    end.tv_sec = 0;
+    end.tv_nsec = 0;
 }
 
 stopwatch::~stopwatch() {
-    LARGE_INTEGER current_time;
-    QueryPerformanceCounter(&current_time); // Отримуємо поточний час
-    LARGE_INTEGER elapsed;
-    elapsed.QuadPart = current_time.QuadPart - creation_time.QuadPart; // Обчислюємо різницю між поточним часом та часом створення
-    double elapsed_seconds = static_cast<double>(elapsed.QuadPart) / frequency.QuadPart;
+    timespec current_time;
+    clock_gettime(CLOCK_MONOTONIC, &current_time);
+    double elapsed_seconds = current_time.tv_sec - creation_time.tv_sec;
     cout << "Пройшло часу зі створення об'єкта: " << elapsed_seconds << " секунд\n";
 }
 
 void stopwatch::Start() {
-    QueryPerformanceCounter(&start);
+    clock_gettime(CLOCK_MONOTONIC, &start);
 }
 
 void stopwatch::Stop() {
-    QueryPerformanceCounter(&end);
+    clock_gettime(CLOCK_MONOTONIC, &end);
 }
 
 void stopwatch::Show() {
-    LARGE_INTEGER elapsed;
-    elapsed.QuadPart = end.QuadPart - start.QuadPart;
-    double elapsed_seconds = static_cast<double>(elapsed.QuadPart) / frequency.QuadPart;
+    double elapsed_seconds = end.tv_sec - start.tv_sec;
     cout << "Пройшло часу зі старту: " << elapsed_seconds << " секунд\n";
 }
 
 int main() {
-    SetConsoleOutputCP(65001);
     stopwatch ob;
 
     char c;

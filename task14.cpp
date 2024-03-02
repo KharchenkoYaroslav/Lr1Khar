@@ -19,9 +19,7 @@ public:
 stopwatch::stopwatch() {
     clock_gettime(CLOCK_MONOTONIC, &creation_time);
     start.tv_sec = 0;
-    start.tv_nsec = 0;
     end.tv_sec = 0;
-    end.tv_nsec = 0;
 }
 
 stopwatch::~stopwatch() {
